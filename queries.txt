@@ -1,0 +1,56 @@
+1. Hur många dokument finns det i din collection?
+db.items.count()
+
+2. Hur stort värde har alla produkter tillsammans? (summera priset)
+db.items.aggregate([
+    {
+        $group: {
+            _id: null,
+            totalPrice: {
+                $sum: "$price"
+            }
+        }
+    }
+])
+
+3. Sortera produkterna i första hand fallande efter pris, i andra hand i stigande bokstavsordning efter namn.
+//fallande pris
+db.items.find().sort({price: 1})
+
+//stigande bokstavsordning
+db.items.find().sort({item: 1})
+
+4. Vilka tre element kommer först i bokstavsordning, sorterat på namnet?
+(Det går att bara läsa de tre första dokument, men den bästa lösningen visar bara tre dokument.)
+db.items.find().sort({item: 1}).limit(3)
+
+5. Räkna ut det största och minsta värdet respektive medelvärdet för priset på produkterna.
+db.items.aggregate([
+    {
+        $group: {
+            _id: null,
+            highestPrice: {
+                $max: "$price"
+            },
+            lowestPrice: {
+                $min: "$price"
+            },
+            totalPrice: {
+                $sum: "$price"
+            },
+        meanVal: {$avg: "$price"},
+        }
+    }
+])
+            
+
+
+6. Hur många produkter har ett värde större än medelvärdet? (du kan använda värdet du räknade ut i uppgift 2.5)
+
+7. Hur många produkter finns det i varje kategori? (gruppera på kategori)
+
+8. Välj ut en kategori och visa de fem dyraste produkterna. (match m.m.)
+
+9. Vilken är den tjugonde produkten, sorterat i bokstavsordning efter namn? (limit, skip)
+
+10. Välj en av era kategorier. Hur stort värde har alla produkter i den kategorin?

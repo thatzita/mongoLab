@@ -1,0 +1,134 @@
+//aggregering
+
+db.animals.aggregate([
+    {
+        $group: {
+            _id: null,
+            antalDjur: { $sum: 1 }, //antal dokument - för varje dokument + 1
+            totaltAntalBen: { $sum: "$legs" } //finns en egenskap som heter legs med en siffa över antal ben, räknar ut antalet ben som finns i alla dokument
+        }
+    }
+])
+
+//antalet doccument
+db.items.count()
+
+database.collection.count()
+
+
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+
+db.library.insertMany([{
+    title: "Lord of the rings",
+    author: "J.R.R. Tolkien",
+    year: 1954
+}, {
+    title:"Pippi Långstrump",
+    author:"Astrid Lindgren",
+    year:1945
+}, {
+    title:"Lord of the flies",
+    author:"William Golding",
+    year:1954
+}, {
+    title:"Mistborn: the final empire",
+    author:"Brandon Sanderson",
+    year:2006
+}, {
+    title:"Foundation",
+    author:"Isaac Asimov",
+    year:1951
+}, {
+    title:"Lock in",
+    author:"John Scalzi",
+    year:2014
+}, {
+    title:"The girl with all the gifts",
+    author:"M.R. Carey",
+    year:2014
+}])
+
+
+
+
+// 8a Använd find() för att se så att alla böcker hamnat i databasen.
+db.library.find()
+{ "_id" : ObjectId("5ba4b24424f2770699c34436"), "title" : "Lord of the rings", "author" : "J.R.R. Tolkien", "year" : 1954 }
+{ "_id" : ObjectId("5ba4b24424f2770699c34437"), "title" : "Pippi Långstrump", "author" : "Astrid Lindgren", "year" : 1945 }
+{ "_id" : ObjectId("5ba4b24424f2770699c34438"), "title" : "Lord of the flies", "author" : "William Golding", "year" : 1954 }
+{ "_id" : ObjectId("5ba4b24424f2770699c34439"), "title" : "Mistborn: the final empire", "author" : "Brandon Sanderson", "year" : 2006 }
+{ "_id" : ObjectId("5ba4b24424f2770699c3443a"), "title" : "Foundation", "author" : "Isaac Asimov", "year" : 1951 }
+{ "_id" : ObjectId("5ba4b24424f2770699c3443b"), "title" : "Lock in", "author" : "John Scalzi", "year" : 2014 }
+{ "_id" : ObjectId("5ba4b24424f2770699c3443c"), "title" : "The girl with all the gifts", "author" : "M.R. Carey", "year" : 2014 }
+
+// 8b Använd find(filter) för att visa alla böcker som publicerades 1954.
+db.library.find({
+    "year": 1954 
+})
+{ "_id" : ObjectId("5ba4b24424f2770699c34436"), "title" : "Lord of the rings", "author" : "J.R.R. Tolkien", "year" : 1954 }
+{ "_id" : ObjectId("5ba4b24424f2770699c34438"), "title" : "Lord of the flies", "author" : "William Golding", "year" : 1954 }
+
+// 8c Visa alla böcker som publicerats efter 1960.
+db.library.find({
+    "year": {$gt: 1960}
+})
+{ "_id" : ObjectId("5ba4b24424f2770699c34439"), "title" : "Mistborn: the final empire", "author" : "Brandon Sanderson", "year" : 2006 }
+{ "_id" : ObjectId("5ba4b24424f2770699c3443b"), "title" : "Lock in", "author" : "John Scalzi", "year" : 2014 }
+{ "_id" : ObjectId("5ba4b24424f2770699c3443c"), "title" : "The girl with all the gifts", "author" : "M.R. Carey", "year" : 2014 }
+
+
+// 8d Visa alla böcker som publicerats mellan 2000 och 2010.
+db.library.find({
+    "year": {$gt:2000, $lt:2010}
+})
+{ "_id" : ObjectId("5ba4b24424f2770699c34439"), "title" : "Mistborn: the final empire", "author" : "Brandon Sanderson", "year" : 2006 }
+
+
+// 8e Visa alla böcker som skrivits av antingen Astrid Lindgren eller Isaac Asimov.
+db.library.find({
+  "author": {$in: ["Astrid Lindgren", "Isaac Asimov"]}
+})
+{ "_id" : ObjectId("5ba4b24424f2770699c34437"), "title" : "Pippi Långstrump", "author" : "Astrid Lindgren", "year" : 1945 }
+{ "_id" : ObjectId("5ba4b24424f2770699c3443a"), "title" : "Foundation", "author" : "Isaac Asimov", "year" : 1951 }
+
+// 8f Visa alla böcker vars titel börjar med "The". Tips: regex.
+db.library.find({
+    "title": {$regex: "^The"}
+  })
+  { "_id" : ObjectId("5ba4b24424f2770699c3443c"), "title" : "The girl with all the gifts", "author" : "M.R. Carey", "year" : 2014 }
+
+
+//La till en till film i DB som börjar med "The" och sedan använde samma regex som ovan
+db.library.insert({
+    "title": "The girl on the train",
+    "author": "Paula Hawkins",
+    "year": 2015
+})
+
+db.library.find({
+    "title": {$regex: "^The"}
+  })
+
+{ "_id" : ObjectId("5ba4b24424f2770699c3443c"), "title" : "The girl with all the gifts", "author" : "M.R. Carey", "year" : 2014 }
+{ "_id" : ObjectId("5ba4ba2c24f2770699c3443d"), "title" : "The girl on the train", "author" : "Paula Hawkins", "year" : 2015 }
+
+
+//ta bort ett object
+db.flightless.deleteOne({_id: ObjectId("5ba4cd91c039392acc60d7a0")})
+
+//ta bort flera object samtidigt med hjälp av _id + $in
+db.flightless.deleteMany({
+    _id: {$in: [
+        ObjectId("5ba4cd69c37a7b10505aa917"), 
+        ObjectId("5ba4cd4b1cfb9209302555d8"), 
+        ObjectId("5ba4cd4b1cfb9209302555d8"), 
+        ObjectId("5ba4ccc8647ab632d4cc25f9"),
+        ObjectId("5ba4cc74342148147863dfdb"), 
+        ObjectId("5ba4cc466eb0491c60b97f8a"), 
+        ObjectId("5ba4cc394052df1788c8e249")
+    ]}
+})
+
+////////////////////////////////////////////////
+////////////////////////////////////////////////
