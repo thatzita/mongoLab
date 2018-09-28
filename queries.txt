@@ -13,7 +13,9 @@ db.items.aggregate([
     }
 ])
 
+
 3. Sortera produkterna i första hand fallande efter pris, i andra hand i stigande bokstavsordning efter namn.
+//en rad inte två
 //fallande pris
 db.items.find().sort({price: 1})
 
@@ -25,6 +27,7 @@ db.items.find().sort({item: 1})
 db.items.find().sort({item: 1}).limit(3)
 
 5. Räkna ut det största och minsta värdet respektive medelvärdet för priset på produkterna.
+
 db.items.aggregate([
     {
         $group: {
@@ -35,17 +38,27 @@ db.items.aggregate([
             lowestPrice: {
                 $min: "$price"
             },
-            totalPrice: {
-                $sum: "$price"
-            },
         meanVal: {$avg: "$price"},
         }
     }
 ])
             
 
-
 6. Hur många produkter har ett värde större än medelvärdet? (du kan använda värdet du räknade ut i uppgift 2.5)
+
+db.items.aggregate([
+    {
+        $group: {
+            _id: null,
+            average: {$avg: "$price"},
+        },
+    },
+])
+
+//5050.1511627906975
+
+db.items.find( { "price" : { $gt: 5050.1511627906975 } } ).count()
+
 
 7. Hur många produkter finns det i varje kategori? (gruppera på kategori)
 
@@ -54,3 +67,18 @@ db.items.aggregate([
 9. Vilken är den tjugonde produkten, sorterat i bokstavsordning efter namn? (limit, skip)
 
 10. Välj en av era kategorier. Hur stort värde har alla produkter i den kategorin?
+
+
+1. Skapa JavaScript-filer för att lägga till och ta bort index från databasen.
+
+2. Lägg till fler dokument i databasen, så att era queries på uppgifterna 2.7, 2.8 och 2.9 tar mer än 10 sekunder att köra. Skriv ner hur lång tid respektive query tar att köra.
+
+3. Lägg till index till databasen med hjälp skriptfilen. Kör era queries och skriv ner tidsåtgången. Kör varje query minst tre gånger och ta medianvärdet.
+
+a).Vad förväntar ni er ska hända med tidsåtgången?
+
+b)Vad hände egentligen, blev det någon skillnad?
+
+c)Vilka index gjorde störst skillnad?
+
+Provade ni några index som inte gjorde någon skillnad? Kan ni förklara varför?

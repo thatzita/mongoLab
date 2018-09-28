@@ -9,6 +9,7 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
     const db = client.db(dbName); // ansluten
     const randomAmountOfTime = Math.floor(Math.random() * 100) + 20; //antalet dokument som ska skapas
     const collectionName = "items";
+
     let documentsToBeInserted = generateProduct(randomAmountOfTime);
 
     db.createCollection(collectionName, function(err, res) {
