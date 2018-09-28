@@ -42,7 +42,7 @@ db.items.aggregate([
         }
     }
 ])
-            
+
 
 6. Hur många produkter har ett värde större än medelvärdet? (du kan använda värdet du räknade ut i uppgift 2.5)
 
@@ -59,14 +59,46 @@ db.items.aggregate([
 
 db.items.find( { "price" : { $gt: 5050.1511627906975 } } ).count()
 
-
 7. Hur många produkter finns det i varje kategori? (gruppera på kategori)
+
+db.items.aggregate(
+  { $group:{ _id: "$category", count: { $sum: 1 } } }
+);
+
 
 8. Välj ut en kategori och visa de fem dyraste produkterna. (match m.m.)
 
+db.items.aggregate(
+  { $match: { category: "python" } },
+  { $group:{ _id: "$item", price: { $sum: "$price" } } },
+  { $sort:{price: -1}},
+  { $limit : 5 }
+
+);
+
 9. Vilken är den tjugonde produkten, sorterat i bokstavsordning efter namn? (limit, skip)
 
+db.items.aggregate([
+  { $group:{ _id: "$item"}},
+  { $sort:{_id: -1}},
+  {$limit:20},
+  { $skip : 19}
+  ]
+);
+
 10. Välj en av era kategorier. Hur stort värde har alla produkter i den kategorin?
+
+db.items.aggregate([
+    { $match: { category: "python" } },
+    {
+        $group: {
+            _id: "$category",
+            totalPrice: {
+                $sum: "$price"
+            }
+        }
+    }
+])
 
 
 1. Skapa JavaScript-filer för att lägga till och ta bort index från databasen.
@@ -82,3 +114,4 @@ b)Vad hände egentligen, blev det någon skillnad?
 c)Vilka index gjorde störst skillnad?
 
 Provade ni några index som inte gjorde någon skillnad? Kan ni förklara varför?
+
