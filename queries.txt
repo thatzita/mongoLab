@@ -103,12 +103,11 @@ db.items.aggregate([
 2.7
 db.items.find({"category": "python"}).count()
 
-
 2.8
 db.items.find({"category":"python"}).sort({price: -1}).limit(5)
 
 2.9
-db.items.sort({item:1}).skip(19).limit(1)
+db.items.find().sort({ item: 1 }).skip(19).limit(1)
 
 a)Vad förväntar ni er ska hända med tidsåtgången?
 
