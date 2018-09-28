@@ -10,18 +10,6 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
     const db = client.db(dbName); // ansluten
     const collectionName = "items";
         
-        db.collection(collectionName).createIndex( { category : 1}, function(err, result) {
-            if (err) throw err;
-            console.log(result);
-            client.close();
-         });
-
-         db.collection(collectionName).createIndex( { price : -1 }, function(err, result) {
-            if (err) throw err;
-            console.log(result);
-            client.close();
-         });
-
          db.collection(collectionName).createIndex( { item : 1 }, function(err, result) {
             if (err) throw err;
             console.log(result);
