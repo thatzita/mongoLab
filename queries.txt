@@ -107,7 +107,7 @@ db.items.aggregate([
 
 3. Lägg till index till databasen med hjälp skriptfilen. Kör era queries och skriv ner tidsåtgången. Kör varje query minst tre gånger och ta medianvärdet.
 
-a).Vad förväntar ni er ska hända med tidsåtgången?
+a)Vad förväntar ni er ska hända med tidsåtgången?
 
 b)Vad hände egentligen, blev det någon skillnad?
 
