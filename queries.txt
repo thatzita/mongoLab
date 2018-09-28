@@ -42,15 +42,95 @@ db.items.aggregate([
         }
     }
 ])
-            
+
 
 
 6. Hur många produkter har ett värde större än medelvärdet? (du kan använda värdet du räknade ut i uppgift 2.5)
 
+db.items.aggregate([
+    {
+        $group: {
+            _id: null,
+            average: {$avg: "$price"},
+        }
+
+    },{
+      _id:null,
+
+    }
+
+])
+
+db.testCollection.aggregate([{
+    $group: {
+        _id: {
+            ASSIGN_ID: "$ASSIGN_ID",
+            STATUS: "$STATUS"
+        },
+        count: {
+            "$sum": 1
+        }
+    }
+}, {
+    $group: {
+        _id: "$_id.ASSIGN_ID",
+        STATUS_GROUP: {
+            $push: {
+                STATUS: "$_id.STATUS",
+                count: "$count"
+            }
+        }
+    }
+}])
+
+
+
+{$match: {"price":{$gt:5000}}},
+
+{ $group: { _id: null, count: { $sum: 1 } } }
+
 7. Hur många produkter finns det i varje kategori? (gruppera på kategori)
+
+db.items.aggregate(
+
+
+  { $group:{ _id: "$category", count: { $sum: 1 } } }
+);
+
 
 8. Välj ut en kategori och visa de fem dyraste produkterna. (match m.m.)
 
+db.items.aggregate(
+  { $match: { category: "python" } },
+  { $group:{ _id: "$item", price: { $sum: "$price" } } },
+  { $sort:{price: -1}},
+  { $limit : 5 }
+
+);
+
 9. Vilken är den tjugonde produkten, sorterat i bokstavsordning efter namn? (limit, skip)
 
+db.items.aggregate([
+  { $group:{ _id: "$item"}},
+  { $sort:{_id: -1}},
+  {$limit:20},
+  { $skip : 19}
+
+  ]
+);
+
 10. Välj en av era kategorier. Hur stort värde har alla produkter i den kategorin?
+
+db.items.aggregate([
+
+    { $match: { category: "python" } },
+
+    {
+        $group: {
+            _id: "$category",
+            totalPrice: {
+                $sum: "$price"
+            }
+        }
+    }
+])

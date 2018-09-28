@@ -37,8 +37,9 @@ function generateProduct(random) {
     const color = ['red', 'blue', 'pink', "green", "orange", "yellow", "black", "white"]
     const material = ['wood', 'plastic', 'metal', "kryptonite", "silk", "paper", "flesh", "gold", "silver", "blood"];
     const thing = ['balloon', 'bicycle', 'hammer', 'wrench', "shotgun", "football", "chainsaw", "monstertruck", "volvo", "doll", "hat"];
+    const category = ["javascript", "python", "php", "ruby","java","c++", "c#" ]
     // const price = [99, 199, 299, 1999, 10, 25, 2500, 4999];
-    
+
 
     function randomElement(list) {
         let r = Math.random() * list.length;
@@ -49,18 +50,20 @@ function generateProduct(random) {
         let c = randomElement(color);
         let m = randomElement(material);
         let t = randomElement(thing);
+        let ca = randomElement(category);
+
         // let p = randomElement(price);
         const p = Math.floor(Math.random() * 10000) + 10;
-        
+
 
         let newItem = {
             item: `${c} ${m} ${t}`,
+            category:ca,
             price: p
         }
         allItems.push(newItem);
-        
+
     }
     return allItems
 
 }
-
