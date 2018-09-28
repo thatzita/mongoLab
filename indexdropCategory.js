@@ -10,11 +10,13 @@ MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
     const db = client.db(dbName); // ansluten
     const collectionName = "items";
 
-        db.collection(collectionName).removeMany( (err, ok) => {
-            if(err) throw err;
-            console.log(`Alla documents in "${collectionName}" has now been deleted`);
+        db.collection(collectionName).dropIndex( {"category" :1}, function(err, result) {
+            if (err) throw err;
+            console.log(result);
             client.close();
-        });
+         });
+
+
 
     console.log("Connected");
 
