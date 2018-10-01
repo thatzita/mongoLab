@@ -7,9 +7,10 @@ const dbName = 'shop'; // Database Name
 MongoClient.connect(url, {useNewUrlParser: true}, (err, client) => {
     if (err) throw err; // if unable to connect
     const db = client.db(dbName); // ansluten
-    const randomAmountOfTime = Math.floor(Math.random() * 2000000) + 20; //antalet dokument som ska skapas
+    const randomAmountOfTime = Math.floor(Math.random() * 20000) + 20; //antalet dokument som ska skapas
     const collectionName = "items";
-    let documentsToBeInserted = generateProduct(1000000);
+    let documentsToBeInserted = generateProduct(50000);
+    // let documentsToBeInserted = generateProduct(randomAmountOfTime);
 
     db.createCollection(collectionName, function(err, res) {
         if (err) throw err;
@@ -38,7 +39,7 @@ function generateProduct(random) {
     const material = ['wood', 'plastic', 'metal', "kryptonite", "silk", "paper", "flesh", "gold", "silver", "blood"];
     const thing = ['balloon', 'bicycle', 'hammer', 'wrench', "shotgun", "football", "chainsaw", "monstertruck", "volvo", "doll", "hat"];
     const category = ["javascript", "python", "php", "ruby","java","c++", "c#" ]
-    // const price = [99, 199, 299, 1999, 10, 25, 2500, 4999];
+    const price = [99, 199, 299, 1999, 10, 25, 2500, 4999, 9999, 15999];
 
 
     function randomElement(list) {
@@ -52,8 +53,8 @@ function generateProduct(random) {
         let t = randomElement(thing);
         let ca = randomElement(category);
 
-        // let p = randomElement(price);
-        const p = Math.floor(Math.random() * 10000) + 10;
+        let p = randomElement(price);
+        // const p = Math.floor(Math.random() * 10000) + 10;
 
 
         let newItem = {

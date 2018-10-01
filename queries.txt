@@ -17,7 +17,7 @@ db.items.aggregate([
 3. Sortera produkterna i första hand fallande efter pris, i andra hand i stigande bokstavsordning efter namn.
 //en rad inte två
 //fallande pris
-db.items.find().sort({price: 1})
+db.items.find().sort({price: 1, item: 1})
 
 //stigande bokstavsordning
 db.items.find().sort({item: 1})
