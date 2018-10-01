@@ -110,16 +110,69 @@ db.items.aggregate([
 2.7
 db.items.find({"category": "python"}).count()
 
+  Medianvärdet: 324 millisekunder utan indexering.
+
+  Medianvärdet: 38 millisekunder med indexering
+
+
+  db.items.aggregate(
+    { $group:{ _id: "$category", count: { $sum: 1 } } }
+  );
+    Medianvärdet: 1189 millisekunder utan indexering.
+
+    Medianvärdet: 1242 millisekunder med indexering
+
 2.8
 db.items.find({"category":"python"}).sort({price: -1}).limit(5)
 
+  Medianvärdet: 478 millisekunder utan indexering
+  Meidanvärdet: 0 millisekunder med indexering
+
+  db.items.explain("executionStats").aggregate(
+    { $match: { category: "python" } },
+    { $group:{ _id: "$item", price: { $sum: "$price" } } },
+    { $sort:{price: -1}},
+    { $limit : 5 }
+
+  );
+
+    Medianvärdet: 777 millisekunder utan indexering
+    Meidanvärdet: 497 millisekunder med indexering
+
+
 2.9
-db.items.find().sort({ item: 1 }).skip(19).limit(1)
+  db.items.find().sort({ item: 1 }).skip(19).limit(1)
+
+  Medianvärdet: 1149 millisekunder utan indexering
+  Medianvärdet 0 millisekunder med indexering
+
+  db.items.explain("executionStats").aggregate([
+    { $group:{ _id: "$item"}},
+    { $sort:{item: -1}},
+    {$limit:20},
+    { $skip : 19}
+    ]
+  );
+
+  Medianvärdet: 1667 millisekunder utan indexering
+  Medianvärdet 1690 millisekunder med indexering
 
 a)Vad förväntar ni er ska hända med tidsåtgången?
 
+  Vi förväntade oss att tidsåtgången skulle förkortas drastiskt.
+
+
 b)Vad hände egentligen, blev det någon skillnad?
+
+  Vi testade först med find och då gick det betydligt snabbare med indexering. Däremot så blev det ingen märkbar skillnad när man använde sig av aggregering.
 
 c)Vilka index gjorde störst skillnad?
 
+  2.9 gjorde störst skillnad när vi använde oss av find. Från 1149 millisekunder till 0.
+
+  Ingen större skillnad under aggregering.
+
 Provade ni några index som inte gjorde någon skillnad? Kan ni förklara varför?
+
+  Vi provade att indexera aggregering och det blev ingen skillnad. Men det har ju med att queries måste kolla igenom hela collection ändå för att t.ex kunna lägga ihop summan av alla produkter.
+  När man använder sig av find() och har indexerat kommer din collection vara sorterad efter vald egenskap. Detta gör att om du sorterar din sökning kommer det gå betydligt snabbare då sorteringen redan är gjord. 
